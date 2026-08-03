@@ -61,7 +61,7 @@ services:
       - n8n:/home/node/.n8n
       - n8n_tmp:/home/node/.tmp
     env_file:
-      - .env   
+      - .env
     depends_on:
       postgres:
         condition: service_healthy
@@ -80,7 +80,7 @@ services:
       - n8n:/home/node/.n8n
       - n8n_tmp:/home/node/.tmp
     env_file:
-      - .env  
+      - .env
     depends_on:
       postgres:
         condition: service_healthy
