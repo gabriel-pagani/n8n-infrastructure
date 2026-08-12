@@ -8,15 +8,9 @@ volumes:
   n8n:
   n8n_tmp:
 
-x-logging: &default-logging
-  driver: "json-file"
-  options:
-    max-size: "10m"
-    max-file: "3"
-
 services:
   redis:
-    image: redis:7-alpine
+    image: redis:8-alpine
     container_name: redis
     command: redis-server --appendonly yes --appendfsync everysec
     restart: unless-stopped
@@ -29,10 +23,9 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-    logging: *default-logging
 
   postgres:
-    image: postgres:16-alpine
+    image: postgres:17-alpine
     container_name: postgres
     restart: unless-stopped
     networks:
@@ -48,7 +41,6 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-    logging: *default-logging
 
   n8n:
     image: n8nio/n8n:latest
@@ -67,7 +59,6 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
-    logging: *default-logging
 
   n8n_webhook:
     image: n8nio/n8n:latest
@@ -86,7 +77,6 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
-    logging: *default-logging
 
   n8n_worker:
     image: n8nio/n8n:latest
@@ -105,7 +95,6 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
-    logging: *default-logging
 
   n8n_task_runner:
     image: n8nio/runners:latest
@@ -118,7 +107,6 @@ services:
       - N8N_RUNNERS_AUTH_TOKEN=${N8N_RUNNERS_AUTH_TOKEN}
     depends_on:
       - n8n
-    logging: *default-logging
 
   n8n_task_runner_worker:
     image: n8nio/runners:latest
@@ -131,7 +119,6 @@ services:
       - N8N_RUNNERS_AUTH_TOKEN=${N8N_RUNNERS_AUTH_TOKEN}
     depends_on:
       - n8n_worker
-    logging: *default-logging
 
   cloudflare:
     image: cloudflare/cloudflared:latest
@@ -146,4 +133,3 @@ services:
       - n8n
       - n8n_webhook
       - n8n_worker
-    logging: *default-logging
