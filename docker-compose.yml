@@ -11,7 +11,6 @@ volumes:
 services:
   redis:
     image: redis:8-alpine
-    container_name: redis
     command: redis-server --appendonly yes --appendfsync everysec --save ""
     restart: unless-stopped
     networks:
@@ -26,7 +25,6 @@ services:
 
   postgres:
     image: postgres:17-alpine
-    container_name: postgres
     restart: unless-stopped
     networks:
       - network
@@ -44,7 +42,6 @@ services:
 
   n8n:
     image: n8nio/n8n:latest
-    container_name: n8n
     command: start
     restart: unless-stopped
     networks:
@@ -62,7 +59,6 @@ services:
 
   n8n_webhook:
     image: n8nio/n8n:latest
-    container_name: n8n_webhook
     command: webhook
     restart: unless-stopped
     networks:
@@ -80,7 +76,6 @@ services:
 
   n8n_worker:
     image: n8nio/n8n:latest
-    container_name: n8n_worker
     command: worker --concurrency=10
     restart: unless-stopped
     networks:
@@ -98,7 +93,6 @@ services:
 
   n8n_task_runner:
     image: n8nio/runners:latest
-    container_name: n8n_task_runner
     restart: unless-stopped
     networks:
       - network
@@ -110,7 +104,6 @@ services:
 
   n8n_task_runner_worker:
     image: n8nio/runners:latest
-    container_name: n8n_task_runner_worker
     restart: unless-stopped
     networks:
       - network
@@ -122,7 +115,6 @@ services:
 
   cloudflare:
     image: cloudflare/cloudflared:latest
-    container_name: cloudflare
     command: tunnel --no-autoupdate run
     restart: unless-stopped
     networks:
