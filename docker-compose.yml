@@ -52,6 +52,7 @@ services:
       - .env
     environment:
       - N8N_DISABLE_PRODUCTION_MAIN_PROCESS=true
+      - N8N_CONTENT_SECURITY_POLICY={"frame-ancestors":["'none'"]}
     depends_on:
       postgres:
         condition: service_healthy
