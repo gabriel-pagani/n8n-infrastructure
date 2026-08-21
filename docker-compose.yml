@@ -51,6 +51,8 @@ services:
       - n8n_tmp:/home/node/.tmp
     env_file:
       - .env
+    environment:
+      - N8N_DISABLE_PRODUCTION_MAIN_PROCESS=true
     depends_on:
       postgres:
         condition: service_healthy
