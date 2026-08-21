@@ -10,8 +10,8 @@ volumes:
 
 services:
   redis:
-    image: redis:8-alpine
-    command: redis-server --appendonly yes --appendfsync everysec --save ""
+    image: redis:7.4
+    command: redis-server --appendonly yes --appendfsync everysec --save "" --maxmemory-policy noeviction
     restart: unless-stopped
     networks:
       - network
@@ -24,12 +24,12 @@ services:
       retries: 5
 
   postgres:
-    image: postgres:17-alpine
+    image: postgres:18
     restart: unless-stopped
     networks:
       - network
     volumes:
-      - postgres:/var/lib/postgresql/data
+      - postgres:/var/lib/postgresql
     environment:
       - POSTGRES_DB=${DB_POSTGRESDB_DATABASE}
       - POSTGRES_USER=${DB_POSTGRESDB_USER}
