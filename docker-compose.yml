@@ -79,6 +79,7 @@ services:
   n8n_worker:
     image: n8nio/n8n:latest
     command: worker --concurrency=10
+    stop_grace_period: 60s
     restart: unless-stopped
     networks:
       - network
