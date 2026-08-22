@@ -91,7 +91,7 @@ services:
       redis:
         condition: service_healthy
 
-  n8n_task_runner_worker:
+  n8n_task_runner:
     image: n8nio/runners:latest
     restart: unless-stopped
     networks:
