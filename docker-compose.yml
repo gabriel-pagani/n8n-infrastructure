@@ -30,12 +30,10 @@ services:
       - network
     volumes:
       - postgres:/var/lib/postgresql
-    environment:
-      - POSTGRES_DB=${DB_POSTGRESDB_DATABASE}
-      - POSTGRES_USER=${DB_POSTGRESDB_USER}
-      - POSTGRES_PASSWORD=${DB_POSTGRESDB_PASSWORD}
+    env_file:
+      - envs/postgres.env
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${DB_POSTGRESDB_USER} -d ${DB_POSTGRESDB_DATABASE}"]
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -49,7 +47,7 @@ services:
     volumes:
       - n8n:/home/node/.n8n
     env_file:
-      - .env
+      - envs/.env
     environment:
       - N8N_DISABLE_PRODUCTION_MAIN_PROCESS=true
     depends_on:
@@ -67,7 +65,7 @@ services:
     volumes:
       - n8n:/home/node/.n8n
     env_file:
-      - .env
+      - envs/.env
     depends_on:
       postgres:
         condition: service_healthy
@@ -84,7 +82,7 @@ services:
     volumes:
       - n8n:/home/node/.n8n
     env_file:
-      - .env
+      - envs/.env
     depends_on:
       postgres:
         condition: service_healthy
@@ -108,8 +106,8 @@ services:
     restart: unless-stopped
     networks:
       - network
-    environment:
-      - TUNNEL_TOKEN=${CLOUDFLARE_TOKEN}
+    env_file:
+      - envs/cloudflare.env
     depends_on:
       - n8n
       - n8n_webhook
