@@ -48,6 +48,7 @@ services:
       - n8n:/home/node/.n8n
     env_file:
       - envs/.env
+      - envs/ai-assistant.env
     environment:
       - N8N_DISABLE_PRODUCTION_MAIN_PROCESS=true
     depends_on:
