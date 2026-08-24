@@ -6,7 +6,6 @@ volumes:
   postgres:
   redis:
   n8n:
-  n8n_tmp:
 
 services:
   redis:
@@ -38,6 +37,14 @@ services:
       timeout: 5s
       retries: 5
 
+  jaeger:
+    image: jaegertracing/jaeger:latest
+    restart: unless-stopped
+    networks:
+      - network
+    ports:
+      - "127.0.0.1:16686:16686"
+
   n8n:
     image: n8nio/n8n:latest
     command: start
@@ -52,10 +59,12 @@ services:
     environment:
       - N8N_DISABLE_PRODUCTION_MAIN_PROCESS=true
     depends_on:
+      redis:
+        condition: service_healthy      
       postgres:
         condition: service_healthy
-      redis:
-        condition: service_healthy
+      jaeger:
+        condition: service_started
 
   n8n_webhook:
     image: n8nio/n8n:latest
@@ -68,9 +77,9 @@ services:
     env_file:
       - envs/.env
     depends_on:
-      postgres:
-        condition: service_healthy
       redis:
+        condition: service_healthy      
+      postgres:
         condition: service_healthy
 
   n8n_worker:
@@ -85,9 +94,9 @@ services:
     env_file:
       - envs/.env
     depends_on:
-      postgres:
-        condition: service_healthy
       redis:
+        condition: service_healthy      
+      postgres:
         condition: service_healthy
 
   n8n_task_runner:
@@ -122,5 +131,4 @@ services:
       - envs/cloudflare.env
     depends_on:
       - n8n
-      - n8n_webhook
       - n8n_worker
