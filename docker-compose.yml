@@ -5,6 +5,7 @@ networks:
 volumes:
   postgres:
   redis:
+  jaeger:
   n8n:
 
 services:
@@ -42,6 +43,13 @@ services:
     restart: unless-stopped
     networks:
       - network
+    environment:
+      - SPAN_STORAGE_TYPE=badger
+      - BADGER_EPHEMERAL=false
+      - BADGER_DIRECTORY_VALUE=/badger/data
+      - BADGER_DIRECTORY_KEY=/badger/key
+    volumes:
+      - jaeger:/badger
     ports:
       - "127.0.0.1:16686:16686"
 
@@ -81,6 +89,8 @@ services:
         condition: service_healthy      
       postgres:
         condition: service_healthy
+      jaeger:
+        condition: service_started
 
   n8n_worker:
     image: n8nio/n8n:latest
@@ -98,6 +108,8 @@ services:
         condition: service_healthy      
       postgres:
         condition: service_healthy
+      jaeger:
+        condition: service_started
 
   n8n_task_runner:
     image: n8nio/runners:latest
@@ -131,4 +143,4 @@ services:
       - envs/cloudflare.env
     depends_on:
       - n8n
-      - n8n_worker
+      - n8n_webhook
