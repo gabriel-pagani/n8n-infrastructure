@@ -40,12 +40,10 @@ services:
 
   jaeger:
     image: jaegertracing/jaeger:latest
-    command: ["--config", "/etc/jaeger/jaeger-settings.yml"]
     restart: unless-stopped
     networks:
       - network
     volumes:
-      - ./jaeger-settings.yml:/etc/jaeger/jaeger-settings.yml:ro
       - jaeger:/badger
     ports:
       - "127.0.0.1:16686:16686"
