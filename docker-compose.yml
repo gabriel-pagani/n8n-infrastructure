@@ -45,8 +45,6 @@ services:
       - network
     volumes:
       - jaeger:/badger
-    ports:
-      - "127.0.0.1:16686:16686"
 
   n8n:
     image: n8nio/n8n:latest
@@ -139,3 +137,4 @@ services:
     depends_on:
       - n8n
       - n8n_webhook
+      - jaeger
