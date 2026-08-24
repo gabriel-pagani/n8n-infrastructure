@@ -5,7 +5,6 @@ networks:
 volumes:
   postgres:
   redis:
-  jaeger:
   n8n:
 
 services:
@@ -43,8 +42,6 @@ services:
     restart: unless-stopped
     networks:
       - network
-    volumes:
-      - jaeger:/badger
 
   n8n:
     image: n8nio/n8n:latest
