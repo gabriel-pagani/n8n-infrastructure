@@ -7,7 +7,6 @@ volumes:
   redis:
   n8n:
   prometheus:
-  grafana:
 
 services:
   redis:
@@ -133,24 +132,13 @@ services:
     restart: unless-stopped
     networks:
       - network
+    ports:
+      - "127.0.0.1:9090:9090"
     volumes:
       - ./prometheus-settings.yml:/etc/prometheus/prometheus.yml:ro
       - prometheus:/prometheus
     depends_on:
       - n8n
-
-  grafana:
-    image: grafana/grafana:latest
-    restart: unless-stopped
-    networks:
-      - network
-    volumes:
-      - grafana:/var/lib/grafana
-      - ./grafana-datasources.yml:/etc/grafana/provisioning/datasources/datasources.yml:ro
-    env_file:
-      - envs/grafana.env
-    depends_on:
-      - prometheus
 
   cloudflare:
     image: cloudflare/cloudflared:latest
@@ -164,4 +152,3 @@ services:
       - n8n
       - n8n_webhook
       - jaeger
-      - grafana
