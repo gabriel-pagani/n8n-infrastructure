@@ -125,6 +125,7 @@ services:
       - ./searxng-settings.yml:/etc/searxng/settings.yml:ro
 
   node_exporter:
+    hostname: pegasus
     image: prom/node-exporter:latest
     command:
       - --path.rootfs=/host
