@@ -124,6 +124,17 @@ services:
     volumes:
       - ./searxng-settings.yml:/etc/searxng/settings.yml:ro
 
+  node_exporter:
+    image: prom/node-exporter:latest
+    command:
+      - --path.rootfs=/host
+    restart: unless-stopped
+    pid: host
+    networks:
+      - network
+    volumes:
+      - /:/host:ro,rslave
+
   prometheus:
     image: prom/prometheus:latest
     command:
