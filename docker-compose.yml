@@ -6,6 +6,8 @@ volumes:
   postgres:
   redis:
   n8n:
+  prometheus:
+  grafana:
 
 services:
   redis:
@@ -123,6 +125,33 @@ services:
     volumes:
       - ./searxng-settings.yml:/etc/searxng/settings.yml:ro
 
+  prometheus:
+    image: prom/prometheus:latest
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --storage.tsdb.retention.time=15d
+    restart: unless-stopped
+    networks:
+      - network
+    volumes:
+      - ./prometheus-settings.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus:/prometheus
+    depends_on:
+      - n8n
+
+  grafana:
+    image: grafana/grafana:latest
+    restart: unless-stopped
+    networks:
+      - network
+    volumes:
+      - grafana:/var/lib/grafana
+      - ./grafana-datasources.yml:/etc/grafana/provisioning/datasources/datasources.yml:ro
+    env_file:
+      - envs/grafana.env
+    depends_on:
+      - prometheus
+
   cloudflare:
     image: cloudflare/cloudflared:latest
     command: tunnel --no-autoupdate run
@@ -135,3 +164,4 @@ services:
       - n8n
       - n8n_webhook
       - jaeger
+      - grafana
